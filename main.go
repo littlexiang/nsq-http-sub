@@ -182,8 +182,6 @@ func (s *StreamServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			timer := time.AfterFunc(time.Duration(*timeout)*time.Second, func() {
 				log.Printf("timeout after %d seconds", *timeout)
 				sr.consumer.Stop()
-				sr.conn.Close()
-				streamServer.Del(sr)
 			})
 			for {
 				select {
@@ -193,20 +191,20 @@ func (s *StreamServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 				}
 			}
 		}(sr)
-	} else {
-		// this read allows us to detect clients that disconnect
-		go func(rw *bufio.ReadWriter) {
-			b, err := rw.ReadByte()
-			if err != nil {
-				log.Printf("got connection err %s", err.Error())
-			} else {
-				log.Printf("unexpected data on request socket (%c); closing", b)
-			}
-			sr.consumer.Stop()
-		}(bufrw)
-
-		go sr.HeartbeatLoop()
 	}
+
+	go sr.HeartbeatLoop()
+
+	// this read allows us to detect clients that disconnect
+	go func(rw *bufio.ReadWriter) {
+		b, err := rw.ReadByte()
+		if err != nil {
+			log.Printf("disconnect client %s", err.Error())
+		} else {
+			log.Printf("unexpected data on request socket (%c); closing", b)
+		}
+		sr.consumer.Stop()
+	}(bufrw)
 }
 
 func (sr *StreamReader) HeartbeatLoop() {
@@ -233,7 +231,7 @@ func (sr *StreamReader) HandleMessage(message *nsq.Message) error {
 	sr.Lock()
 	defer sr.Unlock()
 
-	if sr.messageCount >= *maxMessages {
+	if (*maxMessages > 0) && (sr.messageCount >= *maxMessages) {
 		errMsg := fmt.Sprintf("maxMessages reached %d/%d", sr.messageCount, *maxMessages)
 		log.Print(errMsg)
 		message.RequeueWithoutBackoff(1)
@@ -248,8 +246,6 @@ func (sr *StreamReader) HandleMessage(message *nsq.Message) error {
 
 	if sr.messageCount == *maxMessages {
 		sr.consumer.Stop()
-		sr.conn.Close()
-		streamServer.Del(sr)
 	}
 
 	go func() {
