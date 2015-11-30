@@ -286,6 +286,8 @@ func main() {
 	log.Printf("listening on %s", httpAddr.String())
 
 	streamServer = &StreamServer{}
+	streamServer.clients = make(map[uint]*StreamReader)
+
 	server := &http.Server{Handler: streamServer}
 	err = server.Serve(httpListener)
 
