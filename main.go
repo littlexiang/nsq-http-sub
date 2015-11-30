@@ -4,6 +4,7 @@ package main
 
 import (
 	"bufio"
+	_ "net/http/pprof"
 	//	"errors"
 	"flag"
 	"fmt"
@@ -41,25 +42,23 @@ type StreamServer struct {
 	messageCount uint64
 
 	sync.RWMutex // embed a r/w mutex
-	clients      []*StreamReader
+	clients      map[uint]*StreamReader
 }
+
+var StreamReaderCounter uint = 0
 
 func (s *StreamServer) Set(sr *StreamReader) {
 	s.Lock()
 	defer s.Unlock()
-	s.clients = append(s.clients, sr)
+	StreamReaderCounter++
+	sr.id = StreamReaderCounter
+	s.clients[sr.id] = sr
 }
 
 func (s *StreamServer) Del(sr *StreamReader) {
 	s.Lock()
 	defer s.Unlock()
-	n := make([]*StreamReader, len(s.clients)-1)
-	for _, x := range s.clients {
-		if x != sr {
-			n = append(n, x)
-		}
-	}
-	s.clients = n
+	delete(s.clients, sr.id)
 }
 
 var streamServer *StreamServer
@@ -74,6 +73,7 @@ type StreamReader struct {
 	bufrw        *bufio.ReadWriter
 	connectTime  time.Time
 	messageCount int
+	id           uint
 }
 
 func ConnectToNSQAndLookupd(r *nsq.Consumer, nsqAddrs []string, lookupd []string) error {
@@ -270,10 +270,15 @@ func main() {
 		log.Fatalf("use --nsqd-tcp-address or --lookupd-http-address not both")
 	}
 
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
+
 	httpAddr, err := net.ResolveTCPAddr("tcp", *httpAddress)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	httpListener, err := net.Listen("tcp", httpAddr.String())
 	if err != nil {
 		log.Fatalf("FATAL: listen (%s) failed - %s", httpAddr.String(), err.Error())
