@@ -28,7 +28,7 @@ var (
 	maxInFlight      = flag.Int("max-in-flight", 100, "max number of messages to allow in flight")
 	nsqdTCPAddrs     = app.StringArray{}
 	lookupdHTTPAddrs = app.StringArray{}
-	timeout          = flag.Int("timeout", 10, "return within N seconds, make it more like old fashioned long poll")
+	timeout          = flag.Int("timeout", 10, "return within N seconds if maxMessages not reached")
 	maxMessages      = flag.Int("max-messages", 1, "return if got N messages in a single poll")
 )
 
