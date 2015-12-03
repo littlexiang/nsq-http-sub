@@ -12,8 +12,7 @@ https://github.com/nsqio/nsq/tree/master/apps/nsq_pubsub
 * GET /stats
 * [TODO] GET /length?topic=topicName&channel=channelName
 
-
-## config
+## usage
 ```
 ➜  nsq-http-sub git:(master) ✗ ./nsq-http-sub --help
 Usage of ./nsq-http-sub:
@@ -31,4 +30,3 @@ Usage of ./nsq-http-sub:
     	return within N seconds if maxMessages not reached (default 10)
 
 ```
-
