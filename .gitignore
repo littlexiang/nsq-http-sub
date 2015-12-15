@@ -22,5 +22,5 @@ _testmain.go
 *.exe
 *.test
 *.prof
-nsq-http-sub
 .DS_Store
+nsq_http_sub

@@ -1,16 +1,24 @@
 # nsq-http-sub
 
-http polling style sub for nsq
+an nsqd & nsqlookupd http interface for 
+- http polling style sub for nsq
+- broadcast operations to all nsqd servers of cluster
 
 originally from official tool nsq_pubsub with extended config and bug fix
 
 https://github.com/nsqio/nsq/tree/master/apps/nsq_pubsub
 
 ## api
-
+### sub
 * GET /sub?topic=topicName&channel=channelName
 * GET /stats
-* [TODO] GET /length?topic=topicName&channel=channelName
+
+### channel operations
+* POST /channel/create?topic=topicName&channel=channelName
+* POST /channel/pause?topic=topicName&channel=channelName
+* POST /channel/unpause?topic=topicName&channel=channelName
+* POST /channel/empty?topic=topicName&channel=channelName
+* POST /channel/delete?topic=topicName&channel=channelName
 
 ## usage
 ```
@@ -24,8 +32,6 @@ Usage of ./nsq-http-sub:
     	max number of messages to allow in flight (default 100)
   -max-messages int
     	return if got N messages in a single poll (default 1)
-  -nsqd-tcp-address value
-    	nsqd TCP address (may be given multiple times)
   -timeout int
     	return within N seconds if maxMessages not reached (default 10)
 
