@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	"nsq-http-sub/app"
+	"nsq_http_sub/app"
 )
 
 type logWriter struct {

@@ -3,7 +3,7 @@ package http_api
 import (
 	"errors"
 
-	"nsq-http-sub/protocol"
+	"nsq_http_sub/protocol"
 )
 
 type getter interface {

@@ -6,7 +6,7 @@ import (
 	"runtime"
 	"strings"
 
-	"nsq-http-sub/app"
+	"nsq_http_sub/app"
 )
 
 type TCPHandler interface {
