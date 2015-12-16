@@ -55,7 +55,7 @@ func broadcastChannelOp(op string, req *http.Request) (err error) {
 		defer resp.Body.Close()
 
 		respBody, err := ioutil.ReadAll(resp.Body)
-		log.Printf("request nsqd %s [%s] %s", req_url, string(respBody), err)
+		log.Printf("request nsqd %s [%s] %v", req_url, string(respBody), err)
 	}
 
 	return nil
@@ -74,12 +74,17 @@ func getAllProducersHttpAddr(topicName string) []string {
 		defer resp.Body.Close()
 
 		respBody, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			log.Printf("ERROR with lookup topic=%s %s", topicName, err.Error())
+			continue
+		}
 
 		respStruct := &NSQLookupdResponse{}
 		json.Unmarshal(respBody, respStruct)
 
+		log.Printf("%#v", respStruct)
+
 		if respStruct.StatusCode != 200 {
-			log.Printf("ERROR with lookup topic=%s %s", topicName, err.Error())
 			continue
 		}
 		for _, producer := range respStruct.Data.Producers {
