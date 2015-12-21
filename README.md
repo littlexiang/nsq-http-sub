@@ -9,6 +9,10 @@ originally from official tool nsq_pubsub with extended config and bug fix
 https://github.com/nsqio/nsq/tree/master/apps/nsq_pubsub
 
 ## api
+### pub
+* POST /pub?topic=topicName
+```curl -d "<message>" http://127.0.0.1:8080/pub?topic=topicName```
+
 ### sub
 * GET /sub?topic=topicName&channel=channelName
 * GET /stats

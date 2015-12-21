@@ -32,6 +32,8 @@ func (s *StreamServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		StatsHandler(w, req)
 	case "/sub":
 		SubHandler(w, req)
+	case "/pub":
+		PubHandler(w, req)
 	default:
 		OpHandler(w, req)
 	}

@@ -64,8 +64,16 @@ func broadcastChannelOp(op string, req *http.Request) (err error) {
 func getAllProducersHttpAddr(topicName string) []string {
 	list := []string{}
 
-	for _, addr := range lookupdHTTPAddrs {
-		resp, err := http.Get("http://" + addr + "/lookup?topic=" + topicName)
+	for _, addr := range ShuffleStringArray(lookupdHTTPAddrs) {
+
+		var url string
+		if topicName == "" {
+			url = "http://" + addr + "/nodes"
+		} else {
+			url = "http://" + addr + "/lookup?topic=" + topicName
+		}
+
+		resp, err := http.Get(url)
 
 		if err != nil {
 			log.Printf("ERROR with lookup topic=%s %s", topicName, err.Error())
@@ -92,7 +100,10 @@ func getAllProducersHttpAddr(topicName string) []string {
 			list = append(list[:], fmt.Sprintf("http://%s:%d", producer.BroadcastAddress, producer.HttpPort))
 		}
 
+		break
+
 	}
+
 	return list
 }
 
