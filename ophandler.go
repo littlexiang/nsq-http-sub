@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"nsq-http-sub/http_api"
+	"github.com/littlexiang/nsq-http-sub/http_api"
 )
 
 func OpHandler(w http.ResponseWriter, req *http.Request) {
