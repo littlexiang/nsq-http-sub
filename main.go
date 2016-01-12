@@ -11,7 +11,7 @@ import (
 	"net/http"
 	"strings"
 
-	"app"
+	"github.com/littlexiang/nsq-http-sub/app"
 )
 
 var (
