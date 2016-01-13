@@ -24,6 +24,9 @@ https://github.com/nsqio/nsq/tree/master/apps/nsq_pubsub
 * POST /channel/empty?topic=topicName&channel=channelName
 * POST /channel/delete?topic=topicName&channel=channelName
 
+## install
+```go get github.com/littlexiang/nsq-http-sub```
+
 ## usage
 ```
 ➜  nsq-http-sub git:(master) ✗ ./nsq-http-sub --help
