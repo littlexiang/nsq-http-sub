@@ -5,8 +5,9 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
-	"nsq-http-sub/http_api"
 	"time"
+
+	"github.com/littlexiang/nsq-http-sub/http_api"
 )
 
 func PubHandler(w http.ResponseWriter, req *http.Request) {

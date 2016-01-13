@@ -3,16 +3,17 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/nsqio/go-nsq"
 	"io"
 	"log"
 	"net"
 	"net/http"
-	"nsq-http-sub/http_api"
 	"os"
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"github.com/littlexiang/nsq-http-sub/http_api"
+	"github.com/nsqio/go-nsq"
 )
 
 func ConnectToNSQAndLookupd(r *nsq.Consumer, lookupd []string) error {
